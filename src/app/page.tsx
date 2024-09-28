@@ -36,8 +36,9 @@ export default function Home() {
   const updateStreak = () => {
     const today = new Date().toDateString();
     if (lastReviewDate !== today) {
-      if (lastReviewDate === new Date(Date.now() - 86400000).toDateString()) {
-        setStreak(streak + 1);
+      const yesterday = new Date(Date.now() - 86400000).toDateString();
+      if (lastReviewDate === yesterday) {
+        setStreak((prevStreak) => prevStreak + 1);
       } else {
         setStreak(1);
       }
@@ -84,11 +85,14 @@ export default function Home() {
     setFlashcards([...flashcards, ...newFlashcards]);
     setInputValue('');
     setIsLoading(false);
+    updateStreak();
   };
 
   const flipCard = () => {
+    if (!showAnswer) {
+      updateStreak();
+    }
     setShowAnswer(!showAnswer);
-    if (!showAnswer) updateStreak();
   };
 
   const nextCard = () => {
